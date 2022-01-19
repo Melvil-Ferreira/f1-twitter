@@ -22,11 +22,13 @@ module.exports.createPost = async (req, res) => {
       )
           throw Error("invalid file");
 
-      if (req.file.size > 5000000) throw Error("max size"); 
+      if (req.file.size > 50000) throw Error("max size"); 
       } catch (err) {
           const errors = uploadErrors(err);
           return res.status(201).json({ errors });
       }
+  } else {
+    // si c'est pas une image
   }
 
   try {
