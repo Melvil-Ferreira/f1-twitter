@@ -14,41 +14,39 @@ module.exports.createPost = async (req, res) => {
   console.log(req.file);
 
   if (req.file?.mimetype?.includes("image")) {
-      try {
+    try {
       if (
-          req.file.mimetype != "image/jpg" &&
-          req.file.mimetype != "image/png" &&
-          req.file.mimetype != "image/jpeg"
+        req.file.mimetype != "image/jpg" &&
+        req.file.mimetype != "image/png" &&
+        req.file.mimetype != "image/jpeg"
       )
-          throw Error("invalid file");
+        throw Error("invalid file");
 
-      if (req.file.size > 50000) throw Error("max size"); 
-      } catch (err) {
-          const errors = uploadErrors(err);
-          return res.status(201).json({ errors });
-      }
+      if (req.file.size > 50000) throw Error("max size");
+    } catch (err) {
+      const errors = uploadErrors(err);
+      return res.status(201).json({ errors });
+    }
   } else {
     // si c'est pas une image
   }
 
   try {
+    const newPost = new postModel({
+      posterId: req.body.posterId,
+      message: req.body.message,
+      picture: req.file
+        ? "./uploads/posts/" + Date.now() + req.body.posterId + ".jpg"
+        : "",
+      video: req.body.video,
+      likers: [],
+      comments: [],
+    });
 
-      const newPost = new postModel({
-          posterId: req.body.posterId,
-          message: req.body.message,
-          picture:
-              req.file
-              ? "./uploads/posts/" + Date.now() + req.body.posterId + ".jpg"
-              : "",
-          video: req.body.video,
-          likers: [],
-          comments: [],
-      });
-
-      const post = await newPost.save();
-      return res.status(201).json(post);
+    const post = await newPost.save();
+    return res.status(201).json(post);
   } catch (err) {
-      return res.status(400).send(err);
+    return res.status(400).send(err);
   }
 };
 

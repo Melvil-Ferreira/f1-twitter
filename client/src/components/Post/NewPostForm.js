@@ -43,8 +43,6 @@ const NewPostForm = () => {
     setFile("");
   };
 
-
-
   useEffect(() => {
     if (!isEmpty(userData)) setIsLoading(false);
 
@@ -59,7 +57,7 @@ const NewPostForm = () => {
           setVideo(embed.split("&")[0]);
           findLink.splice(i, 1);
           setMessage(findLink.join(" "));
-          setPostPicture('');
+          setPostPicture("");
         }
       }
     };

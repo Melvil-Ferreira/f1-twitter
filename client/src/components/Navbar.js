@@ -34,7 +34,7 @@ const Navbar = () => {
             <li></li>
             <li>
               <NavLink exact to="/profil">
-                <img src="./img/icons/login.svg" alt="login"/>
+                <img src="./img/icons/login.svg" alt="login" />
               </NavLink>
             </li>
           </ul>

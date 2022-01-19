@@ -16,74 +16,73 @@ module.exports.userInfo = (req, res) => {
   }).select("-password");
 };
 
-module.exports.updateUser=async (req, res) => {
+module.exports.updateUser = async (req, res) => {
   if (!ObjectID.isValid(req.params.id))
-      return res.status(400).send("ID unknown "+ req.params.id);
+    return res.status(400).send("ID unknown " + req.params.id);
 
   try {
-      await UserModel.findOneAndUpdate(
-          {_id: req.params.id},
-          {
-              $set: {
-                  bio: req.body.bio,
-              },
-          },
-          { new: true, upsert: true, setDefaultsOnInsert: true},
+    await UserModel.findOneAndUpdate(
+      { _id: req.params.id },
+      {
+        $set: {
+          bio: req.body.bio,
+        },
+      },
+      { new: true, upsert: true, setDefaultsOnInsert: true },
       (err, docs) => {
         if (!err) return res.send(docs);
         if (err) return res.status(500).send({ message: err });
       }
     ).clone();
   } catch (err) {
-      return res.status(500).send({message: err});
+    return res.status(500).send({ message: err });
   }
 };
 
 module.exports.deleteUser = async (req, res) => {
   if (!ObjectID.isValid(req.params.id))
-      return res.status(400).send("Id unknown : " + req.params.id);
+    return res.status(400).send("Id unknown : " + req.params.id);
 
-      try {
-        await UserModel.remove({ _id: req.params.id }).exec();
-        res.status(200).json({ message: "Successfully deleted."});
-      } catch (err) {
-        return res.status(500).send({message: err});
-      }
+  try {
+    await UserModel.remove({ _id: req.params.id }).exec();
+    res.status(200).json({ message: "Successfully deleted." });
+  } catch (err) {
+    return res.status(500).send({ message: err });
+  }
 };
 
 module.exports.follow = async (req, res) => {
   if (
-    !ObjectID.isValid(req.params.id) || 
+    !ObjectID.isValid(req.params.id) ||
     !ObjectID.isValid(req.body.idToFollow)
   )
-  return res.status(400).send('ID unknown ' + req.params.id);
+    return res.status(400).send("ID unknown " + req.params.id);
 
-  try { 
+  try {
     console.log(req.params.id, req.body.idToFollow);
     let fsdf = await UserModel.findByIdAndUpdate(
-      req.params.id, 
-      { $addToSet: { following: req.body.idToFollow }},
+      req.params.id,
+      { $addToSet: { following: req.body.idToFollow } },
       { new: true, upsert: true },
       (err, docs) => {
         console.log("premier", err);
-      if (!err) res.status(201).json(docs); 
-      else return res.status(400).json(err);
+        if (!err) res.status(201).json(docs);
+        else return res.status(400).json(err);
       }
     ).clone();
 
     await UserModel.findByIdAndUpdate(
       req.body.idToFollow,
-      { $addToSet: { followers: req.params.id }},
+      { $addToSet: { followers: req.params.id } },
       { new: true, upsert: true },
       (err, docs) => {
-        console.log("2eme", err)
+        console.log("2eme", err);
         if (err) return res.status(400).json(err);
       }
     ).clone();
-
   } catch (err) {
     console.log("dernier", err);
-    return res.status(500).json({message: err });
+    return res.status(500).json({ message: err });
   }
 };
 

@@ -25,7 +25,7 @@ const storage = multer.diskStorage({
     cb(null, `${__dirname}/../client/public/uploads/profil/`);
   },
   filename: function (req, file, cb) {
-    console.log(req.body.name)
+    console.log(req.body.name);
     cb(null, req.body.name + ".jpg");
   },
 });
@@ -33,7 +33,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 router.post("/upload", upload.single("file"), async function (req, res) {
-  console.log(req.body.name)
+  console.log(req.body.name);
   try {
     if (
       req.file.mimetype != "image/jpg" &&

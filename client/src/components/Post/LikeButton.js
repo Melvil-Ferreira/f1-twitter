@@ -15,7 +15,7 @@ const LikeButton = ({ post }) => {
     setLiked(true);
   };
   const unlike = () => {
-    dispatch(unlikePost(post._id, uid))
+    dispatch(unlikePost(post._id, uid));
     setLiked(false);
   };
 
