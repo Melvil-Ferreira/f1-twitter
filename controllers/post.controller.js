@@ -27,16 +27,16 @@ module.exports.createPost = async (req, res) => {
       const errors = uploadErrors(err);
       return res.status(201).json({ errors });
     }
-  } else {
-    // si c'est pas une image
+
   }
 
   try {
+    console.log("test")
     const newPost = new postModel({
       posterId: req.body.posterId,
       message: req.body.message,
       picture: req.file
-        ? "./uploads/posts/" + Date.now() + req.body.posterId + ".jpg"
+        ? `./uploads/posts/${req.file.filename}.jpg`
         : "",
       video: req.body.video,
       likers: [],
